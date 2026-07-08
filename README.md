@@ -6,6 +6,7 @@
 
 *Pluggable pools → cheap quant filter → multi-agent due diligence → rule-based entry timing.*
 
+[![PyPI](https://img.shields.io/pypi/v/alphaagent-quant.svg)](https://pypi.org/project/alphaagent-quant/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-pre--alpha-orange.svg)]()
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)]()
@@ -83,6 +84,12 @@ flowchart TD
 ```bash
 git clone https://github.com/kamendula/AlphaAgent.git && cd AlphaAgent
 make demo        # runs the whole chain on bundled offline snapshots — zero keys, zero network, zero install
+```
+
+Or install as a library (`import alphaagent`):
+
+```bash
+pip install alphaagent-quant          # + [live] / [backtest] / [mcp] extras as needed
 ```
 
 Want live data + a real LLM? Point at a config (free sources like yfinance need no key; set `FMP_API_KEY` / `OPENROUTER_API_KEY` in `.env` for FMP + OpenRouter):

@@ -3,14 +3,30 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "alphaagent"
+name = "alphaagent-quant"
 version = "0.1.0"
-description = "Asset-agnostic, multi-agent stock & crypto screening framework with an honest backtest and a leakage-aware agent layer."
+description = "Multi-agent stock & crypto screening with leakage-aware (point-in-time) LLM evaluation and an honest, mechanical backtest."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "AlphaAgent contributors" }]
-keywords = ["trading", "quant", "llm", "multi-agent", "screening", "crypto", "stocks"]
+keywords = [
+    "llm", "multi-agent", "agents", "algorithmic-trading", "quant",
+    "backtesting", "lookahead-bias", "data-leakage", "point-in-time",
+    "stock-screener", "crypto", "stocks", "trading",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Operating System :: OS Independent",
+]
 
 # The demo path (`make demo`) runs on the standard library alone — zero install.
 # Everything below is optional and only needed for live data / real LLM runs.
@@ -27,6 +43,8 @@ alphaagent = "alphaagent.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/kamendula/AlphaAgent"
+Repository = "https://github.com/kamendula/AlphaAgent"
+Issues = "https://github.com/kamendula/AlphaAgent/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["alphaagent"]

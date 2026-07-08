@@ -6,6 +6,7 @@
 
 *可插拔池子源 → 便宜的量化过滤 → 多 Agent 尽调 → 纯规则进场时机。*
 
+[![PyPI](https://img.shields.io/pypi/v/alphaagent-quant.svg)](https://pypi.org/project/alphaagent-quant/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-pre--alpha-orange.svg)]()
 
@@ -62,6 +63,12 @@
 ```bash
 git clone https://github.com/kamendula/AlphaAgent.git && cd AlphaAgent
 make demo        # 用内置离线快照跑通全链 —— 零 key、零网络、零安装
+```
+
+或当库安装(`import alphaagent`):
+
+```bash
+pip install alphaagent-quant          # 按需加 [live] / [backtest] / [mcp] 附加依赖
 ```
 
 要实时数据 + 真模型?指定配置(在 `.env` 填 `FMP_API_KEY` / `OPENROUTER_API_KEY`):
