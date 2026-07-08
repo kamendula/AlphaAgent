@@ -16,13 +16,15 @@
 
 > 🚧 **Pre-alpha.** APIs may still change. Nothing here is investment advice — see the [disclaimer](#-disclaimer).
 
+**TL;DR** — AlphaAgent is an open-source, **multi-agent framework for screening stocks and crypto with LLMs**, built to avoid the **lookahead bias / data leakage** that quietly fakes most LLM trading backtests. A **point-in-time** guard (**PIT-Guard**) bounds every agent to as-of data, and the profit-proving backtest runs on deterministic rules only — the LLM is never in the measured loop. Runs fully offline with `make demo` (zero keys, zero network).
+
 ---
 
 ## Why another trading-agent repo?
 
-GitHub has plenty of LLM trading bots. Most share the same two blind spots: they **can't be honestly backtested**, and their agents **quietly read the future** (the model already knows what happened; live web search returns post-date news). AlphaAgent is built around fixing exactly that.
+Most LLM trading bots share the same two blind spots: they **can't be honestly backtested**, and their agents **quietly read the future** (the model already knows what happened; live web/tool calls return post-date data). AlphaAgent is built around fixing exactly that.
 
-**Four things no comparable project does all of:**
+**Four things it's built around:**
 
 | | What it means |
 |---|---|
@@ -30,6 +32,14 @@ GitHub has plenty of LLM trading bots. Most share the same two blind spots: they
 | 🔌 **Pluggable collaboration** | `panel` (parallel experts + judge), `debate` (bull vs bear), `vote` — swap the multi-agent topology from config, don't rebuild the orchestration. |
 | 🪙 **Asset-agnostic** | Stocks and crypto through one symbol-routing + provider registry. Add a market = drop one loader file. |
 | 🛡️ **PIT-Guard** | A point-in-time middleware that intercepts every agent tool call, enforces `data timestamp ≤ as-of date`, and mitigates the model's own parametric leakage (anonymization + evidence-grounding + a leakage probe). |
+
+---
+
+## What is "leakage-aware" (point-in-time) LLM evaluation?
+
+**Lookahead bias** (a.k.a. **data leakage**) is when a backtest or an agent uses information it could not have had at decision time — future prices, restated fundamentals, or news published after the as-of date. It makes results look brilliant on paper and fail live.
+
+For **LLM trading agents** the problem is worse than in classical quant: the model's *weights* already encode what happened after any historical date, and live web/tool calls return post-date data. **Point-in-time (PIT) correctness** means every input is filtered to `timestamp ≤ as-of date`. AlphaAgent enforces this at the tool boundary and additionally bounds the model's parametric memory (anonymization, evidence-grounding, a leakage probe) — collectively **PIT-Guard**.
 
 ---
 
@@ -126,6 +136,13 @@ The offline `make demo` produces the same shape instantly (mock LLM + bundled sn
 
 ## The moat: PIT-Guard 🛡️
 
+| | Typical LLM trading bot | AlphaAgent |
+|---|---|---|
+| Does the backtest include the LLM? | Yes → hallucination inflates returns | No → mechanical layer only |
+| Are agents limited to as-of data? | Rarely enforced | Enforced at the tool boundary |
+| Handles the model "already knowing the future"? | Ignored | Anonymization + evidence-grounding + leakage probe |
+| Reproducible offline? | Needs keys / network | `make demo`, zero keys |
+
 Leakage comes in two flavors. AlphaAgent treats them separately:
 
 **① Tool/data leakage — 100% enforceable.** A middleware sits at the tool boundary and guarantees every agent only sees data timestamped on or before the as-of date: price series truncated, news date-filtered, fundamentals served as *point-in-time* snapshots (as-reported, not restated).
@@ -176,6 +193,28 @@ python -m alphaagent.mcp          # serves over stdio
 - [x] **M2** — entry rules (`breakout`/`pullback`) + backtest adapters (`simple` stdlib + optional `backtesting.py`) + mechanical-layer report + `alphaagent backtest`
 - [x] **M3** — PIT-Guard: boundary (`GuardedRouter`) + anonymization + evidence-grounding + leakage probe
 - [x] **M4** — `debate` policy · optional [MCP server](#optional-mcp-server) · editable prompt files (`agents/prompts/*.md`) · reference examples for every extension point
+
+---
+
+## FAQ
+
+**Does AlphaAgent prevent lookahead bias / data leakage?**
+Yes — it's the core design. PIT-Guard filters every agent tool call to `timestamp ≤ as-of`, and the performance backtest excludes the LLM entirely, so agent leakage can't touch the headline number.
+
+**How is this different from a normal LLM trading backtest?**
+Most LLM backtests run the model *inside* the historical loop, so its future knowledge (and post-date news) silently leaks in. AlphaAgent separates a deterministic, backtestable **mechanical layer** from the (non-backtested) **agent layer**, and guards the agent layer point-in-time.
+
+**Which LLMs does it work with?**
+Any — it's vendor-agnostic. Built-in clients for OpenAI and OpenRouter (including free models), plus a deterministic offline **mock** LLM so the demo needs no API key.
+
+**Does it place real trades?**
+No. It outputs research + rule-based entry signals only. Not investment advice.
+
+**Does it support stocks and crypto?**
+Both, through one symbol-routing + provider registry. Data via FMP or yfinance, or bundled offline snapshots for the demo.
+
+**Can I add my own data source, strategy, or agent?**
+Yes — every extension point is a one-file, one-decorator plugin: data providers, pool sources, quant filters, analyst roles, collaboration policies, and entry rules.
 
 ---
 
