@@ -1,0 +1,14 @@
+{
+  "symbol": "NVDA",
+  "latest_period": "2024-09-30",
+  "latest_filing": "2024-11-01",
+  "eps_growth": [
+    0.35,
+    0.28,
+    0.2,
+    0.15
+  ],
+  "revenue_growth": 0.5,
+  "net_margin": 0.5,
+  "pe": 45.0
+}

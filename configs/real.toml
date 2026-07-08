@@ -1,0 +1,30 @@
+# Real end-to-end config: live FMP data + a real LLM (HY via OpenRouter).
+# Requires FMP_API_KEY and OPENROUTER_API_KEY (or open_router_api_key) in .env.
+# US equities only (FMP's stable EOD endpoint is reliable for these).
+
+[data.providers]
+equity = ["fmp"]
+
+[[pool]]
+source = "watchlist"
+tag = "real"
+symbols = ["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META"]
+
+[filter]
+source = "trend"
+min_score = 0.4
+sma_window = 50
+roc_window = 60
+
+[agents]
+llm = "openrouter"
+model = "tencent/hy3:free"
+policy = "panel"
+roles = ["fundamental", "technical", "sentiment", "risk"]
+top_k = 2
+pit_guard = true
+
+[entry]
+rule = "pullback"
+lookback = 20
+atr_mult = 2.0

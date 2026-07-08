@@ -1,0 +1,17 @@
+# AlphaAgent default config — live data via yfinance (no API key required).
+# Requires the optional live extra:  pip install "alphaagent[live]"
+
+[data.providers]
+equity = ["yfinance"]
+crypto = ["yfinance"]
+
+[[pool]]
+source = "watchlist"
+tag = "my-list"
+symbols = ["AAPL", "MSFT", "NVDA", "GOOGL", "BTC-USD", "ETH-USD"]
+
+[filter]
+source = "trend"
+min_score = 0.5
+sma_window = 50
+roc_window = 60

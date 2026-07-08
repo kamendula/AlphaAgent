@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "alphaagent"
+version = "0.1.0"
+description = "Asset-agnostic, multi-agent stock & crypto screening framework with an honest backtest and a leakage-aware agent layer."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "AlphaAgent contributors" }]
+keywords = ["trading", "quant", "llm", "multi-agent", "screening", "crypto", "stocks"]
+
+# The demo path (`make demo`) runs on the standard library alone — zero install.
+# Everything below is optional and only needed for live data / real LLM runs.
+dependencies = []
+
+[project.optional-dependencies]
+live = ["yfinance>=0.2.40"]
+backtest = ["backtesting>=0.3", "pandas"]  # only for the optional backtesting.py adapter
+mcp = ["mcp>=1.2"]  # optional MCP "薄外挂": `python -m alphaagent.mcp`
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+alphaagent = "alphaagent.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/kamendula/AlphaAgent"
+
+[tool.hatch.build.targets.wheel]
+packages = ["alphaagent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

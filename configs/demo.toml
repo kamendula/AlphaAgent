@@ -1,0 +1,43 @@
+# AlphaAgent demo config — fully offline.
+# Uses the bundled CSV snapshots via the "demo" data provider. No keys, no network.
+
+[data]
+fallback = false          # demo stays fully offline — never touch the network
+
+[data.providers]
+equity = ["demo"]
+crypto = ["demo"]
+
+[[pool]]
+source = "watchlist"
+tag = "demo-list"
+symbols = ["AAPL", "MSFT", "NVDA", "AMZN", "BTC-USD", "ETH-USD"]
+
+[filter]
+source = "trend"
+min_score = 0.45
+sma_window = 50
+roc_window = 60
+
+# Multi-agent panel — runs offline via the deterministic "mock" LLM (no keys).
+[agents]
+llm = "mock"              # swap to "openai" (+ model) for real reasoning
+policy = "panel"          # or "vote" / "llm_judge"
+roles = ["fundamental", "technical", "sentiment", "risk"]
+top_k = 3                 # only the top-N filtered candidates reach the agents
+pit_guard = true          # PIT-Guard: bound tools to as-of, anonymize, ground, probe
+
+# Entry timing — pure rule/technical signals (no agent), the second gate.
+# "pullback" fires on demo data; "breakout" needs a volume surge that the
+# synthetic demo volumes rarely produce (it works on real data).
+[entry]
+rule = "pullback"
+lookback = 20
+atr_mult = 2.0
+
+# Backtest defaults for `alphaagent backtest --symbol X --config configs/demo.toml`.
+[backtest]
+adapter = "simple"        # stdlib default; "backtesting" uses backtesting.py
+tp_R = 2.0
+max_bars = 20
+warmup = 60

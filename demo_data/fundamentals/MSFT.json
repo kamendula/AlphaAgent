@@ -1,0 +1,14 @@
+{
+  "symbol": "MSFT",
+  "latest_period": "2024-09-30",
+  "latest_filing": "2024-11-01",
+  "eps_growth": [
+    0.1,
+    0.1,
+    0.09,
+    0.09
+  ],
+  "revenue_growth": 0.12,
+  "net_margin": 0.35,
+  "pe": 33.0
+}
